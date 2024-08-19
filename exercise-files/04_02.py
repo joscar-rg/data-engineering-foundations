@@ -5,7 +5,7 @@ import pyspark
 spark = pyspark.sql.SparkSession \
    .builder \
    .appName("Python Spark SQL basic example") \
-   .config('spark.driver.extraClassPath', "/Users/harshittyagi/Downloads/postgresql-42.2.18.jar") \
+   .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3") \
    .getOrCreate()
 
 
@@ -14,8 +14,7 @@ movies_df = spark.read \
    .format("jdbc") \
    .option("url", "jdbc:postgresql://localhost:5432/etl_pipeline") \
    .option("dbtable", "movies") \
-   .option("user", "harshittyagi") \
-   .option("password", "doll") \
+   .option("user", "postgres") \
    .option("driver", "org.postgresql.Driver") \
    .load()
 
