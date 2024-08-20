@@ -5,8 +5,8 @@ import pyspark.sql
 spark = pyspark.sql.SparkSession \
         .builder \
         .appName("Python Spark SQL basic example") \
-        .config('spark.driver.extraClassPath', "/Users/harshittyagi/Downloads/postgresql-42.2.18.jar") \
-        .getOrCreate()
+    .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3") \
+    .getOrCreate()
 
 ##read movies table from db using spark
 def extract_movies_to_df():
@@ -14,8 +14,7 @@ def extract_movies_to_df():
         .format("jdbc") \
         .option("url", "jdbc:postgresql://localhost:5432/etl_pipeline") \
         .option("dbtable", "movies") \
-        .option("user", "harshittyagi") \
-        .option("password", "doll") \
+        .option("user", "postgres") \
         .option("driver", "org.postgresql.Driver") \
         .load()
     return movies_df
@@ -26,8 +25,7 @@ def extract_users_to_df():
         .format("jdbc") \
         .option("url", "jdbc:postgresql://localhost:5432/etl_pipeline") \
         .option("dbtable", "users") \
-        .option("user", "harshittyagi") \
-        .option("password", "doll") \
+        .option("user", "postgres") \
         .option("driver", "org.postgresql.Driver") \
         .load()
     return users_df
@@ -48,8 +46,7 @@ def transform_avg_ratings(movies_df, users_df):
 def load_df_to_db(df):
     mode = "overwrite"
     url = "jdbc:postgresql://localhost:5432/etl_pipeline"
-    properties = {"user": "<username>",
-                  "password": "<password>",
+    properties = {"user": "postgres",
                   "driver": "org.postgresql.Driver"
                   }
     df.write.jdbc(url=url,

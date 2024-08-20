@@ -5,8 +5,8 @@ import pyspark.sql
 spark = pyspark.sql.SparkSession \
         .builder \
         .appName("Python Spark SQL basic example") \
-        .config('spark.driver.extraClassPath', "/Users/harshittyagi/Downloads/postgresql-42.2.18.jar") \
-        .getOrCreate()
+    .config("spark.jars.packages", "org.postgresql:postgresql:42.7.3") \
+    .getOrCreate()
 
 ##read movies table from db using spark
 def extract_movies_to_df():
@@ -14,8 +14,7 @@ def extract_movies_to_df():
         .format("jdbc") \
         .option("url", "jdbc:postgresql://localhost:5432/etl_pipeline") \
         .option("dbtable", "movies") \
-        .option("user", "<username>") \
-        .option("password", "<password>") \
+        .option("user", "postgres") \
         .option("driver", "org.postgresql.Driver") \
         .load()
     return movies_df
@@ -26,8 +25,7 @@ def extract_users_to_df():
         .format("jdbc") \
         .option("url", "jdbc:postgresql://localhost:5432/etl_pipeline") \
         .option("dbtable", "users") \
-        .option("user", "<username>") \
-        .option("password", "<password>") \
+        .option("user", "postgres") \
         .option("driver", "org.postgresql.Driver") \
         .load()
     return users_df
@@ -46,13 +44,12 @@ def transform_avg_ratings(movies_df, users_df):
 
 ##load transformed dataframe to the database
 def load_df_to_db(df):
-    mode = "____"
+    mode = "overwrite"
     url = "jdbc:postgresql://localhost:5432/etl_pipeline"
-    properties = {"user": "<username>",
-                  "password": "<password>",
+    properties = {"user": "postgres",
                   "driver": "org.postgresql.Driver"
                   }
-    df.____.jdbc(url=url,
+    df.write.jdbc(url=url,
                   table = "avg_ratings",
                   mode = mode,
                   properties = properties)
@@ -62,7 +59,7 @@ if __name__ == "__main__":
     movies_df = extract_movies_to_df()
     users_df = extract_users_to_df()
     ##pass the dataframes to the transformation function
-    ratings_df = transform_avg_ratings(____, ____)
+    ratings_df = transform_avg_ratings(movies_df, users_df)
     ##load the ratings dataframe 
-    ____(___)
+    load_df_to_db(ratings_df)
 
