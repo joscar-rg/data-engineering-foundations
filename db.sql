@@ -3,6 +3,9 @@
 
 CREATE DATABASE etl_pipelline;
 
+-- \c -- shows current conn info
+-- \l -- shows databases
+-- \dt -- shows tables
 -- \c etl_pipeline;
 
 CREATE TABLE movies (

@@ -1,0 +1,5 @@
+/venv/
+/airflow/logs/
+/airflow/airflow.cfg
+/airflow/airflow.db
+/airflow/webserver_config.py
